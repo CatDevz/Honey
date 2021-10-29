@@ -16,6 +16,8 @@ namespace Honey.Core.Modrinth
 
         private readonly JsonSerializerOptions _jsonSerializerOptions = new JsonSerializerOptions()
         {
+            IgnoreNullValues = true,
+            PropertyNameCaseInsensitive = true,
             PropertyNamingPolicy = new JsonSnakeCaseNamingPolicy()
         };
 
@@ -34,6 +36,12 @@ namespace Honey.Core.Modrinth
             string address = $"https://api.modrinth.com/api/v1/mod?{queryParamsString}";
 
             return await _httpClient.GetFromJsonAsync<SearchResponse>(address, _jsonSerializerOptions);
+        }
+
+        public async Task<Mod?> GetModAsync(int modId)
+        {
+            string address = $"https://api.modrinth.com/api/v1/mod/{modId}";
+            return await _httpClient.GetFromJsonAsync<Mod>(address, _jsonSerializerOptions);
         }
 
         public void Dispose()
