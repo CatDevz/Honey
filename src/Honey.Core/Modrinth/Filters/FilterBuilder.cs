@@ -11,13 +11,17 @@ namespace Honey.Core.Modrinth.Filters
 
         public FilterBuilder Filter(string name, string value) => InternalFilter(string.Empty, name, value, And);
         public FilterBuilder FilterNot(string name, string value) => InternalFilter("NOT", name, value, AndNot);
+        
         public FilterBuilder And(string name, string value) => InternalAddStatement("AND", name, value);
-        public FilterBuilder Or(string name, string value) => InternalAddStatement("OR", name, value);
-        public FilterBuilder AndNot(string name, string value) => InternalAddStatement("AND NOT", name, value);
-        public FilterBuilder OrNot(string name, string value) => InternalAddStatement("OR NOT", name, value);
         public FilterBuilder And(FilterBuilder builder) => InternalAddSubStatement("AND", builder);
-        public FilterBuilder AndNot(FilterBuilder builder) => InternalAddSubStatement("AND NOT", builder);
+
+        public FilterBuilder Or(string name, string value) => InternalAddStatement("OR", name, value);
         public FilterBuilder Or(FilterBuilder builder) => InternalAddSubStatement("OR", builder);
+
+        public FilterBuilder AndNot(string name, string value) => InternalAddStatement("AND NOT", name, value);
+        public FilterBuilder AndNot(FilterBuilder builder) => InternalAddSubStatement("AND NOT", builder);
+
+        public FilterBuilder OrNot(string name, string value) => InternalAddStatement("OR NOT", name, value);
         public FilterBuilder OrNot(FilterBuilder builder) => InternalAddSubStatement("OR NOT", builder);
         
         public string BuildStatement()
