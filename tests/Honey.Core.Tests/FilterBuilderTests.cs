@@ -1,4 +1,4 @@
-using Honey.Core.Modrinth.Builders;
+using Honey.Core.Modrinth.Filters;
 using Xunit;
 
 namespace Honey.Core.Tests
