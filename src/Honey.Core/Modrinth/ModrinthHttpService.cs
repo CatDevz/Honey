@@ -10,9 +10,9 @@ using O9d.Json.Formatting;
 
 namespace Honey.Core.Modrinth
 {
-    public class ModrinthHttpService : IDisposable
+    public class ModrinthHttpService
     {
-        private readonly HttpClient _httpClient = new HttpClient();
+        private readonly IHttpClientFactory _httpClientFactory;
 
         private readonly JsonSerializerOptions _jsonSerializerOptions = new JsonSerializerOptions()
         {
@@ -20,6 +20,11 @@ namespace Honey.Core.Modrinth
             PropertyNameCaseInsensitive = true,
             PropertyNamingPolicy = new JsonSnakeCaseNamingPolicy()
         };
+
+        public ModrinthHttpService(IHttpClientFactory httpClientFactory)
+        {
+            _httpClientFactory = httpClientFactory;
+        }
 
         public async Task<SearchResponse?> SearchAsync(SearchOptions searchOptions)
         {
@@ -35,18 +40,16 @@ namespace Honey.Core.Modrinth
             string queryParamsString = string.Join("&", parameters.Select((key, value) => $"{key}={value}"));
             string address = $"https://api.modrinth.com/api/v1/mod?{queryParamsString}";
 
-            return await _httpClient.GetFromJsonAsync<SearchResponse>(address, _jsonSerializerOptions);
+            var httpClient = _httpClientFactory.CreateClient();
+            return await httpClient.GetFromJsonAsync<SearchResponse>(address, _jsonSerializerOptions);
         }
 
         public async Task<Mod?> GetModAsync(int modId)
         {
             string address = $"https://api.modrinth.com/api/v1/mod/{modId}";
-            return await _httpClient.GetFromJsonAsync<Mod>(address, _jsonSerializerOptions);
-        }
-
-        public void Dispose()
-        {
-            _httpClient.Dispose();
+            
+            var httpClient = _httpClientFactory.CreateClient();
+            return await httpClient.GetFromJsonAsync<Mod>(address, _jsonSerializerOptions);
         }
     }
 }
