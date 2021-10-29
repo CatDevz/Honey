@@ -41,5 +41,6 @@ namespace Honey.Core.Modrinth.Models
         string License,
         string ClientSide,
         string ServerSide,
-        string Host);
+        string Host
+    );
 }
