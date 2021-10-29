@@ -26,6 +26,11 @@ namespace Honey.Core.Modrinth
             _httpClientFactory = httpClientFactory;
         }
 
+        /// <summary>
+        /// Search for a mod on Modrinth
+        /// </summary>
+        /// <param name="searchOptions">The <see cref="SearchOptions"/> for your desired query.</param>
+        /// <returns>The resulting <see cref="SearchResponse"/></returns>
         public async Task<SearchResponse?> SearchAsync(SearchOptions searchOptions)
         {
             var parameters = new Dictionary<string, string>()
@@ -44,6 +49,11 @@ namespace Honey.Core.Modrinth
             return await httpClient.GetFromJsonAsync<SearchResponse>(address, _jsonSerializerOptions);
         }
 
+        /// <summary>
+        /// Retrieve a mod by its id from Modrinth
+        /// </summary>
+        /// <param name="modId">The mod id</param>
+        /// <returns>If the mod exists, the <see cref="Mod"/> object, else null.</returns>
         public async Task<Mod?> GetModAsync(int modId)
         {
             string address = $"https://api.modrinth.com/api/v1/mod/{modId}";
