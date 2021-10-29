@@ -30,7 +30,7 @@ namespace Honey.Core.Modrinth
                 {"limit", searchOptions.Limit.ToString()}
             };
 
-            string queryParamsString = string.Join("&", parameters.Select((key, value) => $"{key}=${value}"));
+            string queryParamsString = string.Join("&", parameters.Select((key, value) => $"{key}={value}"));
             string address = $"https://api.modrinth.com/api/v1/mod?{queryParamsString}";
 
             return await _httpClient.GetFromJsonAsync<SearchResponse>(address, _jsonSerializerOptions);
