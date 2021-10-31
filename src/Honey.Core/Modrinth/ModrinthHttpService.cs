@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
@@ -37,12 +36,15 @@ namespace Honey.Core.Modrinth
             {
                 {"q", searchOptions.Query},
                 {"filters", searchOptions.Filters.BuildStatement()},
-                {"index", searchOptions.SortBy.ToString()},
+                {"index", searchOptions.SortBy.ToString().ToLower()},
                 {"offset", searchOptions.Offset.ToString()},
                 {"limit", searchOptions.Limit.ToString()}
             };
 
-            string queryParamsString = string.Join("&", parameters.Select((key, value) => $"{key}={value}"));
+            string queryParamsString = string.Join("&", parameters
+                .Where((keyValuePair, _) => !string.IsNullOrEmpty(keyValuePair.Value))
+                .Select((keyValuePair, _) => $"{keyValuePair.Key}={keyValuePair.Value}"));
+            
             string address = $"https://api.modrinth.com/api/v1/mod?{queryParamsString}";
 
             var httpClient = _httpClientFactory.CreateClient();
