@@ -10,7 +10,6 @@ namespace Honey.Core.Modrinth.Filters
     public class FilterBuilder
     {
         private readonly List<string> _statements = new List<string>();
-        private readonly List<SubStatement> _subStatements = new List<SubStatement>();
 
         /// <summary>
         /// Creates a key-value-pair filter [name = value]
@@ -92,13 +91,7 @@ namespace Honey.Core.Modrinth.Filters
         
         internal string BuildStatement()
         {
-            string initialStatement = string.Join(" ", _statements);
-
-            var subStatementBuilder = _subStatements.Select(subStatement =>
-                $"{subStatement.Statement} ({subStatement.Builder.BuildStatement()})").ToList();
-            
-            var subStatement = string.Join(" ", subStatementBuilder);
-            return subStatement == string.Empty ? initialStatement : $"{initialStatement} {subStatement}";
+            return string.Join(" ", _statements);
         }
         
         private FilterBuilder InternalFilter(string operation,
@@ -124,7 +117,7 @@ namespace Honey.Core.Modrinth.Filters
 
         private FilterBuilder InternalAddSubStatement(string statement, FilterBuilder builder)
         {
-            _subStatements.Add(new SubStatement(statement, builder));
+            _statements.Add($"{statement} ({builder.BuildStatement()})");
             return this;
         }
     }

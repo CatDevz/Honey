@@ -48,7 +48,8 @@ OR (Director=Cody))
         public void TestFilterBuilderWithNotStatements()
         {
             string expectedStatement = @"
-genre=action AND NOT actor=leo AND (NOT stuntman=james AND NOT (cameraman=billy OR producer=frank))
+genre=action AND NOT actor=leo AND (NOT stuntman=james AND NOT (cameraman=billy OR producer=frank)) OR NOT programmer=chris 
+OR NOT (developer=cody OR (tester=chris))
 ".Replace("\n", "");
 
             string actualStatement = new FilterBuilder()
@@ -59,6 +60,11 @@ genre=action AND NOT actor=leo AND (NOT stuntman=james AND NOT (cameraman=billy 
                     .AndNot(new FilterBuilder()
                     .Filter("cameraman", "billy")
                     .Or("producer", "frank")))
+                .OrNot("programmer", "chris")
+                .OrNot(new FilterBuilder()
+                    .Filter("developer", "cody")
+                    .Or(new FilterBuilder()
+                        .Filter("tester", "chris")))
                 .BuildStatement();
 
             Assert.Equal(expectedStatement, actualStatement);
